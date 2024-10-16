@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url();
+
+.chart {
+    min-width: 250px;
+    flex-grow: 1;
+}
+
+* {
+    font-family: "Poppins" !important
+}
