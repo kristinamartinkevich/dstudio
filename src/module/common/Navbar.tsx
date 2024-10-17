@@ -10,10 +10,10 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/navbar";
 
-import { ThemeSwitch } from "@/components/theme-switch";
 import Logo from "@/assets/icons/logo.png";
 import { useProjectStore } from "@/store";
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 export const Navbar = () => {
   const { loggedIn, setLoggedIn, username } = useProjectStore();

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { useTheme } from "@/hooks/use-theme";
-import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 import { Button } from "@nextui-org/react";
+import { MoonFilledIcon, SunFilledIcon } from "@/assets/icons";
 
 
 export const ThemeSwitch = () => {
@@ -25,9 +25,9 @@ export const ThemeSwitch = () => {
       isIconOnly
     >
       {isLightTheme ? (
-        <MoonFilledIcon size={22} aria-hidden="true" />
+        <MoonFilledIcon />
       ) : (
-        <SunFilledIcon size={22} aria-hidden="true" />
+        <SunFilledIcon />
       )}
       <VisuallyHidden>
         {isLightTheme ? "Dark Mode" : "Light Mode"}

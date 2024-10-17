@@ -1,4 +1,4 @@
-export const getUTCTimestamp = (dateString: Date) => {
+export const getUTCTimestamp = (dateString: string) => {
     const date = new Date(dateString)
     return new Date(Date.UTC(
         date.getUTCFullYear(),

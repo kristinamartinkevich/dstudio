@@ -6,15 +6,17 @@ interface ProjectStore {
     email: string;
     username: string;
     password: string;
-    token: string | null;
+    token: string;
     tasks: any[];
+    error: string | null;
+    setError: (error: string) => void;
     setTasks: (tasks: any[]) => void;
     setLoading: (loading: boolean) => void;
     setLoggedIn: (loggedIn: boolean) => void;
     setEmail: (email: string) => void;
     setUsername: (username: string) => void;
     setPassword: (password: string) => void;
-    setToken: (token: string | null) => void;
+    setToken: (token: string) => void;
 }
 
 export const useProjectStore = create<ProjectStore>((set) => ({
@@ -23,8 +25,10 @@ export const useProjectStore = create<ProjectStore>((set) => ({
     email: '',
     username: '',
     password: '',
-    token: null,
+    token: '',
     tasks: [],
+    error: null,
+    setError: (error) => set({ error: error }),
     setTasks: (tasks) => set({ tasks: tasks }),
     setLoading: (loading) => set({ loading: loading }),
     setLoggedIn: (loggedIn) => set({ loggedIn: loggedIn }),

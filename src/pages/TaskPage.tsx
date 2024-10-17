@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { fetchTasks } from '@/utils/apiService';
 import { useProjectStore } from '@/store';
-import TaskForm from '@/components/TaskForm';
-import TaskList from '@/components/TaskList';
+import TaskList from '@/module/components/TaskList';
 import { Button, Modal, useDisclosure } from '@nextui-org/react';
-
+import NoResults from '@/module/common/NoResults';
+import CreateTask from '@/module/components/CreateTask';
 
 const TaskPage = () => {
     const { tasks, setTasks, token } = useProjectStore();
@@ -25,10 +25,14 @@ const TaskPage = () => {
                 <h1>Task Manager</h1>
                 <Button onPress={onOpen}>Create a todo</Button>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={fetchData}>
-                    <TaskForm />
+                    <CreateTask />
                 </Modal>
             </div>
-            <TaskList tasks={tasks} />
+            {tasks.length > 0 ? (
+                <TaskList tasks={tasks} />
+            ) : (
+                <NoResults onButtonClick={fetchData} />
+            )}
         </>
     );
 };

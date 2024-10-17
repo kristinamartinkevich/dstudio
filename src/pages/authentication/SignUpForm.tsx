@@ -1,9 +1,10 @@
-import { LockIcon } from '@/assets/icons/LockIcon';
-import { MailIcon } from '@/assets/icons/MailIcon';
+
+import { LockIcon, MailIcon, UserIcon } from '@/assets/icons';
 import { useProjectStore } from '@/store';
+import { Login, Signup } from '@/utils/apiService';
 import { Button } from '@nextui-org/button';
 import { Input, Link } from '@nextui-org/react';
-import axios from 'axios';
+import { useEffect } from 'react';
 
 interface SignUpFormProps {
     changeAuthneticationMode: () => void;
@@ -16,7 +17,9 @@ function SignUpForm(props: SignUpFormProps) {
         email,
         username,
         password,
+        error,
         setEmail,
+        setError,
         setUsername,
         setPassword,
         setLoading,
@@ -24,28 +27,23 @@ function SignUpForm(props: SignUpFormProps) {
         setToken
     } = useProjectStore();
 
+    useEffect(() => {
+        setError('');
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        setLoading(true);
+        setError('');
 
         try {
-            await axios.post(`http://api.calmplete.net/api/InternalLogin/sign-up`, {
-                email,
-                password
-            });
-            const loginResponse = await axios.post(`http://api.calmplete.net/api/InternalLogin`, {
-                username,
-                password,
-                state: "Internal"
-            });
-
-            const accessToken = loginResponse.data.access_token;
+            await Signup(email, password);
+            setLoading(true);
+            const accessToken = await Login(username, password);
             setToken(accessToken);
             setLoggedIn(true);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error during sign up or login:", error);
+            setError(error.response.data)
         } finally {
             setLoading(false);
         }
@@ -68,7 +66,7 @@ function SignUpForm(props: SignUpFormProps) {
                 />
                 <Input
                     endContent={
-                        <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                        <UserIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                     }
                     type="text"
                     className="mb-5"
@@ -79,6 +77,9 @@ function SignUpForm(props: SignUpFormProps) {
                     required
                 />
                 <Input
+                    endContent={
+                        <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
                     type="password"
                     className="mb-5"
                     label="Password"
@@ -87,12 +88,17 @@ function SignUpForm(props: SignUpFormProps) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <div className="d-flex justify-between mb-5">
+                {error &&
+                    <span className='text-danger tex-small mb-5'>
+                        Error: {error}
+                    </span>
+                }
+                <div className="flex justify-center mb-5">
                     <Button type="submit" color="secondary">Sign Up</Button>
                 </div>
-                <div className="flex items-center justify-between">
-                    <span className="text-small" > Already have an account?</span>
-                    <Link className="text-small" onClick={changeAuthneticationMode}>Log in</Link>
+                <div className="flex items-center">
+                    <span className="text-small">Already have an account?</span>
+                    <Link className="text-small ml-1" onClick={changeAuthneticationMode}>Log in</Link>
                 </div>
             </form>
         </>

@@ -1,7 +1,10 @@
+
+import { LockIcon, UserIcon } from "@/assets/icons";
 import { useProjectStore } from "@/store";
+import { Login } from "@/utils/apiService";
 import { Input } from "@nextui-org/input";
-import { Button, Checkbox, Link } from '@nextui-org/react';
-import axios from "axios";
+import { Button, Link } from '@nextui-org/react';
+import { useEffect } from "react";
 
 interface LoginFormProps {
     changeAuthneticationMode: () => void;
@@ -13,6 +16,8 @@ function LoginForm(props: LoginFormProps) {
     const {
         username,
         password,
+        error,
+        setError,
         setUsername,
         setPassword,
         setLoading,
@@ -20,23 +25,21 @@ function LoginForm(props: LoginFormProps) {
         setToken
     } = useProjectStore();
 
+    useEffect(() => {
+        setError('');
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const loginResponse = await axios.post(`http://api.calmplete.net/api/InternalLogin`, {
-                username,
-                password,
-                state: "Internal"
-            });
-
-            const accessToken = loginResponse.data.accessToken;
-            setToken(accessToken);
+            const accessToken = await Login(username, password);
+            setToken(accessToken)
             setLoggedIn(true);
-
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error during login:", error);
+            setError(error.response.data)
         } finally {
             setLoading(false);
         }
@@ -46,6 +49,9 @@ function LoginForm(props: LoginFormProps) {
         <>
             <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
                 <Input
+                    endContent={
+                        <UserIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
                     type="text"
                     className="mb-5"
                     label="Username"
@@ -55,6 +61,9 @@ function LoginForm(props: LoginFormProps) {
                     required
                 />
                 <Input
+                    endContent={
+                        <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                    }
                     type="password"
                     className="mb-5"
                     label="Password"
@@ -63,24 +72,17 @@ function LoginForm(props: LoginFormProps) {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <div className="flex py-2 px-1 justify-between">
-                    <Checkbox
-                        classNames={{
-                            label: "text-small",
-                        }}
-                    >
-                        Remember me
-                    </Checkbox>
-                    <Link color="primary" href="#" size="sm">
-                        Forgot password?
-                    </Link>
-                </div>
-                <div className="d-flex justify-between mb-5">
+                {error &&
+                    <span className='text-danger tex-small mb-5'>
+                        Error: {error}
+                    </span>
+                }
+                <div className="flex justify-center mb-5">
                     <Button type="submit" color="secondary">Log In</Button>
                 </div>
-                <div className="flex items-center justify-between">
-                    <span className="text-small" >Don't have an account? </span><Link className="text-small" onClick={changeAuthneticationMode}>Sign up</Link>
-                </div>
+                <div className="flex items-center">
+                    <span className="text-small">Don't have an account?</span>
+                    <Link className="text-small ml-1" onClick={changeAuthneticationMode}>Sign up</Link></div>
             </form>
         </>
     );

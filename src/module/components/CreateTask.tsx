@@ -1,29 +1,29 @@
 import { useProjectStore } from '@/store';
-import { createTodo } from '@/utils/apiService';
+import { createTask, generateUUID } from '@/utils/apiService';
 import { getUTCTimestamp } from '@/utils/utils';
-import { Button, Checkbox, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
-import axios from 'axios';
+import { Button, Checkbox, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import { FormEvent, useState } from 'react';
 
-const TaskForm = () => {
+const CreateTask = () => {
     const { token, setLoading } = useProjectStore();
+    const [isCompleted, setIsCompleted] = useState(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+        const formData = new FormData(e.target as HTMLFormElement);
         setLoading(true);
-
         try {
             const newTask = {
-                id: (await axios.get('https://www.uuidgenerator.net/api/version1')).data,
+                id: await generateUUID(),
                 title: formData.get('title'),
                 description: formData.get('description'),
-                isCompleted: !!formData.get('isCompleted'),
-                dueDate: getUTCTimestamp(formData.get('dueDate')),
-                createdAt: getUTCTimestamp(formData.get('createdAt')),
-                updatedAt: getUTCTimestamp(formData.get('updatedAt')),
+                isCompleted: isCompleted,
+                dueDate: getUTCTimestamp(formData.get('dueDate') as string),
+                createdAt: getUTCTimestamp(formData.get('createdAt') as string),
+                updatedAt: getUTCTimestamp(formData.get('updatedAt') as string),
             };
-            await createTodo(token, newTask);
-        } catch (error) {
+            await createTask(token, newTask);
+        } catch (error: any) {
             console.error("Error creating todo:", error);
         } finally {
             setLoading(false);
@@ -42,6 +42,7 @@ const TaskForm = () => {
                                 placeholder="Title"
                                 type="text"
                                 name="title"
+                                required
                             />
                         </div>
                         <div className='my-4'>
@@ -50,10 +51,17 @@ const TaskForm = () => {
                                 placeholder="Description"
                                 type="text"
                                 name="description"
+                                required
                             />
                         </div>
                         <div >
-                            <Checkbox name='isCompleted'>isCompleted</Checkbox>
+                            <Checkbox
+                                isSelected={isCompleted}
+                                onChange={(event) => setIsCompleted(event.target.checked)}
+                                name='isCompleted'
+                                required>
+                                isCompleted
+                            </Checkbox>
                         </div>
                         <div className='my-4'>
                             <Input
@@ -61,6 +69,7 @@ const TaskForm = () => {
                                 placeholder="Due Date"
                                 type="date"
                                 name="dueDate"
+                                required
                             />
                         </div>
                         <div>
@@ -68,6 +77,7 @@ const TaskForm = () => {
                                 label="Created At"
                                 type="date"
                                 name="createdAt"
+                                required
                             />
                         </div>
                         <div className='my-4'>
@@ -75,6 +85,7 @@ const TaskForm = () => {
                                 label="Updated At"
                                 type="date"
                                 name="updatedAt"
+                                required
                             />
                         </div>
                     </ModalBody>
@@ -90,4 +101,4 @@ const TaskForm = () => {
     );
 };
 
-export default TaskForm;
+export default CreateTask;

@@ -1,5 +1,6 @@
-import { Footer } from "@/components/footer";
-import { Navbar } from "@/components/navbar";
+import { Footer } from "@/module/common/Footer";
+import { Navbar } from "@/module/common/Navbar";
+
 
 export default function DefaultLayout({
   children,
