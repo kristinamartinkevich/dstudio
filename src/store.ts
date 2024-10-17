@@ -9,6 +9,8 @@ interface ProjectStore {
     token: string;
     tasks: any[];
     error: string | null;
+    isSignUp: boolean;
+    setIsSignUp: (isSignUp: boolean) => void;
     setError: (error: string) => void;
     setTasks: (tasks: any[]) => void;
     setLoading: (loading: boolean) => void;
@@ -28,6 +30,8 @@ export const useProjectStore = create<ProjectStore>((set) => ({
     token: '',
     tasks: [],
     error: null,
+    isSignUp: true,
+    setIsSignUp: (isSignUp) => set({ isSignUp: isSignUp }),
     setError: (error) => set({ error: error }),
     setTasks: (tasks) => set({ tasks: tasks }),
     setLoading: (loading) => set({ loading: loading }),

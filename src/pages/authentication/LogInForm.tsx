@@ -18,6 +18,7 @@ function LoginForm(props: LoginFormProps) {
         password,
         error,
         setError,
+        setIsSignUp,
         setUsername,
         setPassword,
         setLoading,
@@ -27,6 +28,8 @@ function LoginForm(props: LoginFormProps) {
 
     useEffect(() => {
         setError('');
+        setUsername('');
+        setPassword('');
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -39,9 +42,10 @@ function LoginForm(props: LoginFormProps) {
             setLoggedIn(true);
         } catch (error: any) {
             console.error("Error during login:", error);
-            setError(error.response.data)
+            setError(error.response.data);
         } finally {
             setLoading(false);
+            setIsSignUp(false)
         }
     };
 
@@ -80,7 +84,7 @@ function LoginForm(props: LoginFormProps) {
                 <div className="flex justify-center mb-5">
                     <Button type="submit" color="secondary">Log In</Button>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                     <span className="text-small">Don't have an account?</span>
                     <Link className="text-small ml-1" onClick={changeAuthneticationMode}>Sign up</Link></div>
             </form>

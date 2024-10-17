@@ -5,6 +5,7 @@ import TaskList from '@/module/components/TaskList';
 import { Button, Modal, useDisclosure } from '@nextui-org/react';
 import NoResults from '@/module/common/NoResults';
 import CreateTask from '@/module/components/CreateTask';
+import { PlusIcon } from '@/assets/icons';
 
 const TaskPage = () => {
     const { tasks, setTasks, token } = useProjectStore();
@@ -23,7 +24,9 @@ const TaskPage = () => {
         <>
             <div className="flex mb-3 justify-between">
                 <h1>Task Manager</h1>
-                <Button onPress={onOpen}>Create a todo</Button>
+                <Button color="secondary" variant="flat" onPress={onOpen}
+                    startContent={<PlusIcon />}>
+                    Create a task</Button>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={fetchData}>
                     <CreateTask />
                 </Modal>

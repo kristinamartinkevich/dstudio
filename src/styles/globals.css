@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-.chart {
-    min-width: 250px;
-    flex-grow: 1;
-}
-
 * {
     font-family: "Inter" !important
+}
+
+.line-through{
+text-decoration: line-through;
 }

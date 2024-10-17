@@ -1,4 +1,5 @@
 import { useProjectStore } from '@/store';
+import { Task } from '@/types';
 import { createTask, generateUUID } from '@/utils/apiService';
 import { getUTCTimestamp } from '@/utils/utils';
 import { Button, Checkbox, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
@@ -13,10 +14,10 @@ const CreateTask = () => {
         const formData = new FormData(e.target as HTMLFormElement);
         setLoading(true);
         try {
-            const newTask = {
+            const newTask: Task = {
                 id: await generateUUID(),
-                title: formData.get('title'),
-                description: formData.get('description'),
+                title: formData.get('title') as string,
+                description: formData.get('description') as string,
                 isCompleted: isCompleted,
                 dueDate: getUTCTimestamp(formData.get('dueDate') as string),
                 createdAt: getUTCTimestamp(formData.get('createdAt') as string),
@@ -54,25 +55,17 @@ const CreateTask = () => {
                                 required
                             />
                         </div>
-                        <div >
-                            <Checkbox
-                                isSelected={isCompleted}
-                                onChange={(event) => setIsCompleted(event.target.checked)}
-                                name='isCompleted'
-                                required>
-                                isCompleted
-                            </Checkbox>
-                        </div>
-                        <div className='my-4'>
+                        <div>
                             <Input
                                 label="Due Date"
                                 placeholder="Due Date"
                                 type="date"
                                 name="dueDate"
                                 required
+                                description="Due Date must be in the future"
                             />
                         </div>
-                        <div>
+                        <div className='my-4'>
                             <Input
                                 label="Created At"
                                 type="date"
@@ -80,7 +73,7 @@ const CreateTask = () => {
                                 required
                             />
                         </div>
-                        <div className='my-4'>
+                        <div>
                             <Input
                                 label="Updated At"
                                 type="date"
@@ -88,9 +81,18 @@ const CreateTask = () => {
                                 required
                             />
                         </div>
+                        <div className='my-4'>
+                            <Checkbox
+                                isSelected={isCompleted}
+                                onChange={(event) => setIsCompleted(event.target.checked)}
+                                name='isCompleted'
+                                required>
+                                Is completed
+                            </Checkbox>
+                        </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
+                        <Button color="danger" variant="flat" onPress={onClose}>
                             Close
                         </Button>
                         <Button color="primary" type="submit">Add Task</Button>

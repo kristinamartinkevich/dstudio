@@ -9,3 +9,7 @@ export const getUTCTimestamp = (dateString: string) => {
         date.getUTCSeconds()
     )).toISOString()
 };
+
+export const UTCToDate = (dateString: string) => {
+    return new Date(dateString).toISOString().split('T')[0];
+};

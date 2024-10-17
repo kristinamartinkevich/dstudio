@@ -1,12 +1,12 @@
-import { useState } from 'react';
 import LoginForm from './LogInForm';
 import SignUpForm from './SignUpForm';
+import { useProjectStore } from '@/store';
 
 function Authentication() {
-    const [isSignUp, setIsSignUp] = useState(false);
+    const { isSignUp, setIsSignUp } = useProjectStore();
 
     const toggleForm = () => {
-        setIsSignUp((prev) => !prev);
+        setIsSignUp(!isSignUp);
     };
 
     return (

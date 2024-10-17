@@ -21,7 +21,7 @@ export const ThemeSwitch = () => {
     <Button
       aria-label={isLightTheme ? "Switch to dark mode" : "Switch to light mode"}
       onPress={toggleTheme}
-      className={`px-2 py-1 transition-opacity hover:opacity-80 cursor-pointer rounded-lg`}
+      className="px-2 py-1 transition-opacity hover:opacity-80 cursor-pointer rounded-lg"
       isIconOnly
     >
       {isLightTheme ? (

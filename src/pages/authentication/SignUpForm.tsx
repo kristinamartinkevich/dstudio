@@ -29,6 +29,9 @@ function SignUpForm(props: SignUpFormProps) {
 
     useEffect(() => {
         setError('');
+        setEmail('');
+        setUsername('');
+        setPassword('');
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +99,7 @@ function SignUpForm(props: SignUpFormProps) {
                 <div className="flex justify-center mb-5">
                     <Button type="submit" color="secondary">Sign Up</Button>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                     <span className="text-small">Already have an account?</span>
                     <Link className="text-small ml-1" onClick={changeAuthneticationMode}>Log in</Link>
                 </div>

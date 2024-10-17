@@ -54,10 +54,10 @@ export const MailIcon = ({
     aria-hidden="true"
     fill="none"
     focusable="false"
-    height="1em"
+    height="24px"
     role="presentation"
     viewBox="0 0 24 24"
-    width="1em"
+    width="24px"
     {...props}
   >
     <path
@@ -76,10 +76,10 @@ export const UserIcon = ({
     aria-hidden="true"
     fill="none"
     focusable="false"
-    height="1em"
+    height="24px"
     role="presentation"
     viewBox="0 0 24 24"
-    width="1em"
+    width="24px"
     {...props}
   >
     <path d="M17.294 7.29117C17.294 10.2282 14.9391 12.5832 12 12.5832C9.0619 12.5832 6.70601 10.2282 6.70601 7.29117C6.70601 4.35415 9.0619 2.00012 12 2.00012C14.9391 2.00012 17.294 4.35415 17.294 7.29117ZM12 22.0001C7.66237 22.0001 4 21.2951 4 18.5751C4 15.8541 7.68538 15.1741 12 15.1741C16.3386 15.1741 20 15.8791 20 18.5991C20 21.3201 16.3146 22.0001 12 22.0001Z" fill="currentColor" />
@@ -97,10 +97,10 @@ export const LockIcon = ({
     aria-hidden="true"
     fill="none"
     focusable="false"
-    height="1em"
+    height="24px"
     role="presentation"
     viewBox="0 0 24 24"
-    width="1em"
+    width="24px"
     {...props}
   >
     <path
@@ -112,4 +112,25 @@ export const LockIcon = ({
       fill="currentColor"
     />
   </svg>
+);
+
+export const PlusIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="24px"
+    role="presentation"
+    viewBox="0 0 24 24"
+    width="24px"
+    {...props}
+  >
+    <path
+      d="M12.7805 6.27459C12.7805 5.57065 12.2099 5 11.5059 5C10.802 5 10.2313 5.57065 10.2313 6.27459V11.2255H5.27459C4.57065 11.2255 4 11.7962 4 12.5001C4 13.204 4.57065 13.7747 5.27459 13.7747H10.2313V18.7254C10.2313 19.4293 10.802 20 11.5059 20C12.2099 20 12.7805 19.4293 12.7805 18.7254V13.7747H17.7373C18.4412 13.7747 19.0119 13.204 19.0119 12.5001C19.0119 11.7962 18.4412 11.2255 17.7373 11.2255H12.7805V6.27459Z"
+      fill="currentColor" />  </svg>
 );
