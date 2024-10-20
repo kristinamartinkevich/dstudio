@@ -1,9 +1,23 @@
-import { Card, CardBody, CardFooter, CardHeader, Checkbox, Button, Modal, useDisclosure } from '@nextui-org/react';
-import EditTask from './EditTask';
-import { Task } from '@/types';
-import { deleteTask, editTask } from '@/utils/apiService';
-import { useProjectStore } from '@/store';
-import { UTCToDate } from '@/utils/utils';
+import {
+    Card,
+    CardFooter,
+    CardHeader,
+    Checkbox,
+    Button,
+    Modal,
+    useDisclosure,
+    Divider,
+    AccordionItem,
+    Accordion
+} from "@nextui-org/react";
+
+import EditTask from "./EditTask";
+
+import { Task } from "@/types";
+import { editTask } from "@/utils/apiService";
+import { useProjectStore } from "@/store";
+import { UTCToDate } from "@/utils/utils";
+import { EditIcon } from "@/assets/icons";
 
 const TaskItem = ({ task }: { task: Task }) => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -12,49 +26,60 @@ const TaskItem = ({ task }: { task: Task }) => {
     const changeCompletion = async (checked: boolean) => {
         setLoading(true);
         try {
-            task.isCompleted = checked;
-            await editTask(task.id, task, token);
+            const updatedTask: Task = task
+            updatedTask.isCompleted = checked
+            await editTask(task.id, updatedTask, token);
         } catch (error: any) {
-            console.error("Error updating todo completion:", error);
+            console.error("Error updating task completion:", error);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Card>
-            <CardHeader className="flex justify-between">
-                <span className={task.isCompleted ? 'line-through' : ''}>{task.title} </span>
-                <Checkbox isSelected={task.isCompleted}
-                    onChange={(event) => changeCompletion(event.target.checked)} />
-            </CardHeader>
-            <CardBody>
-                <p className='text-small text-slate-800'>
-                    {task.description}
-                </p>
-            </CardBody>
-            <CardFooter className="flex justify-between">
-                <div className='text-slate-800 text-small'>
-                    Due: {UTCToDate(task.dueDate)}
-                </div>
+        <Card className="shadow-md bg-slate-50 dark:bg-slate-900 drop-shadow-md rounded-small" >
+            <CardHeader className="flex justify-end items-center p-3">
+                <Accordion>
+                    <AccordionItem
+                        startContent={
+                            <>
+                                <Checkbox
+                                    color="success"
+                                    isSelected={task.isCompleted}
+                                    onChange={(event) => changeCompletion(event.target.checked)}
+                                />
+                                <span
+                                    className={`text-lg font-semibold ${task.isCompleted ? "line-through text-gray-400 dark:text-zinc-600" : "text-gray-800 dark:text-white"}`}
+                                >
+                                    {task.title}
+                                </span>
+                            </>
+                        }
+                    >
+                        <p className="text-sm text-slate-500">{task.description}</p>
+                    </AccordionItem>
+                </Accordion>
                 <Button
-                    color="success"
-                    type='button'
+                    isIconOnly
+                    className="p-2 rounded-full"
+                    color="warning"
+                    type="button"
                     onPress={onOpen}
-                    variant="flat"
                 >
-                    Edit
+                    <EditIcon />
                 </Button>
-                <Button
-                    color="danger"
-                    type='button'
-                    onPress={() => deleteTask(token, task.id)}
-                    variant="flat"
-                >
-                    Delete
-                </Button>
+            </CardHeader>
+
+            <Divider />
+
+            <CardFooter className="flex justify-between items-center p-3">
+                <div className="text-sm">
+                    <span className="text-slate-500 mr-1">Due:</span>
+                    <span className="text-slate-400">{UTCToDate(task.dueDate)}</span>
+                </div>
+
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                    <EditTask todo={task} />
+                    <EditTask task={task} />
                 </Modal>
             </CardFooter>
         </Card>

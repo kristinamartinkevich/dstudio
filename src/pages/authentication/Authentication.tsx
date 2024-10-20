@@ -1,6 +1,7 @@
-import LoginForm from './LogInForm';
-import SignUpForm from './SignUpForm';
-import { useProjectStore } from '@/store';
+import LoginForm from "./LogInForm";
+import SignUpForm from "./SignUpForm";
+
+import { useProjectStore } from "@/store";
 
 function Authentication() {
     const { isSignUp, setIsSignUp } = useProjectStore();

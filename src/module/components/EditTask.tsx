@@ -1,32 +1,51 @@
-import { FormEvent, useState } from 'react';
-import { Button, Checkbox, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
-import { useProjectStore } from '@/store';
-import { getUTCTimestamp, UTCToDate } from '@/utils/utils';
-import { Task } from '@/types';
-import { editTask } from '@/utils/apiService';
+import { FormEvent } from "react";
+import {
+    Button,
+    Input,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Textarea,
+} from "@nextui-org/react";
 
-const EditTask = ({ todo }: { todo: Task }) => {
+import { useProjectStore } from "@/store";
+import { getUTCTimestamp, UTCToDate } from "@/utils/utils";
+import { Task } from "@/types";
+import { deleteTask, editTask } from "@/utils/apiService";
+import { DeleteIcon } from "@/assets/icons";
+
+const EditTask = ({ task }: { task: Task }) => {
     const { setLoading, token } = useProjectStore();
-    const [isCompleted, setIsCompleted] = useState(todo.isCompleted);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData(e.target as HTMLFormElement);
-        setLoading(true);
 
         try {
-            const updatedTask: Partial<Task> = {};
-            if (formData.get('title') !== todo.title) updatedTask.title = formData.get('title');
-            if (formData.get('description') !== todo.description) updatedTask.description = formData.get('description');
-            if (isCompleted !== todo.isCompleted) updatedTask.isCompleted = isCompleted;
-            if (formData.get('dueDate') !== todo.dueDate) updatedTask.dueDate = getUTCTimestamp(formData.get('dueDate'));
-            if (formData.get('createdAt') !== todo.createdAt) updatedTask.createdAt = getUTCTimestamp(formData.get('dueDate'));
-            if (formData.get('updatedAt') !== todo.updatedAt) updatedTask.updatedAt = getUTCTimestamp(formData.get('updatedAt'));
+            const updatedTask: Partial<Task> = {
+                createdAt: task.createdAt,
+                updatedAt: getUTCTimestamp(new Date()),
+                isCompleted: task.isCompleted,
+                dueDate: getUTCTimestamp(new Date(formData.get("dueDate") as string)),
+                title: formData.get("title") as string
+            };
 
-            await editTask(todo.id, updatedTask, token);
+            await editTask(task.id, updatedTask, token);
         } catch (error) {
-            console.error("Error updating todo:", error);
+            console.error("Error updating task:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteTaskItem = async (token: string, id: string) => {
+        setLoading(true);
+        try {
+            await deleteTask(token, id);
+        } catch (error: any) {
+            console.error("Error deleting task:", error);
         } finally {
             setLoading(false);
         }
@@ -34,72 +53,55 @@ const EditTask = ({ todo }: { todo: Task }) => {
 
     return (
         <ModalContent>
-            {(onClose) => (
-                <form onSubmit={handleSubmit}>
-                    <ModalHeader className="flex flex-col gap-1">Edit a Task</ModalHeader>
-                    <ModalBody>
-                        <div>
-                            <Input
-                                label="Title"
-                                placeholder="Title"
-                                type="text"
-                                name="title"
-                                defaultValue={todo.title}
-                            />
-                        </div>
-                        <div className='my-4'>
-                            <Input
-                                label="Description"
-                                placeholder="Description"
-                                type="text"
-                                name="description"
-                                defaultValue={todo.description}
-                            />
-                        </div>
-                        <div>
-                            <Checkbox
-                                name="isCompleted"
-                                defaultSelected={todo.isCompleted}
-                                onChange={(event) => setIsCompleted(event.target.checked)}>
-                                isCompleted
-                            </Checkbox>
-                        </div>
-                        <div className='my-4'>
-                            <Input
-                                label="Due Date"
-                                placeholder="Due Date"
-                                type="date"
-                                name="dueDate"
-                                defaultValue={UTCToDate(todo.dueDate)}
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                label="Created At"
-                                type="date"
-                                name="createdAt"
-                                defaultValue={UTCToDate(todo.createdAt)}
-                            />
-                        </div>
-                        <div className='my-4'>
-                            <Input
-                                label="Updated At"
-                                type="date"
-                                name="updatedAt"
-                                defaultValue={UTCToDate(todo.updatedAt)}
-                            />
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="flat" onPress={onClose}>
-                            Close
-                        </Button>
-                        <Button color="primary" type="submit"> Update Task</Button>
-                    </ModalFooter>
-                </form >
-            )}
-        </ModalContent>
-
+            <form onSubmit={handleSubmit}>
+                <ModalHeader>Edit Task <span className="text-primary ml-1">{task.title}</span></ModalHeader>
+                <ModalBody className="flex flex-col gap-4">
+                    <div>
+                        <Input
+                            defaultValue={task.title}
+                            label="Title"
+                            name="title"
+                            placeholder="Title"
+                            type="text"
+                        />
+                    </div>
+                    <div>
+                        <Textarea
+                            defaultValue={task.description}
+                            label="Description"
+                            name="description"
+                            placeholder="Description"
+                            type="text"
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            defaultValue={UTCToDate(task.dueDate)}
+                            description="Due Date must be in the future"
+                            label="Due Date"
+                            name="dueDate"
+                            placeholder="Due Date"
+                            type="date"
+                        />
+                    </div>
+                </ModalBody>
+                <ModalFooter className="flex justify-between">
+                    <Button
+                        isIconOnly
+                        className="p-2"
+                        color="danger"
+                        type="button"
+                        variant="flat"
+                        onPress={() => deleteTaskItem(token, task.id)}
+                    >
+                        <DeleteIcon />
+                    </Button>
+                    <Button color="primary" type="submit">
+                        Update Task
+                    </Button>
+                </ModalFooter>
+            </form>
+        </ModalContent >
     );
 };
 

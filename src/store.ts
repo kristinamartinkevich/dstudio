@@ -1,4 +1,5 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { Task } from "./types";
 
 interface ProjectStore {
     loading: boolean;
@@ -7,7 +8,7 @@ interface ProjectStore {
     username: string;
     password: string;
     token: string;
-    tasks: any[];
+    tasks: Task[];
     error: string | null;
     isSignUp: boolean;
     setIsSignUp: (isSignUp: boolean) => void;
@@ -24,10 +25,10 @@ interface ProjectStore {
 export const useProjectStore = create<ProjectStore>((set) => ({
     loading: false,
     loggedIn: false,
-    email: '',
-    username: '',
-    password: '',
-    token: '',
+    email: "",
+    username: "",
+    password: "",
+    token: "",
     tasks: [],
     error: null,
     isSignUp: true,

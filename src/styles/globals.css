@@ -6,6 +6,6 @@
     font-family: "Inter" !important
 }
 
-.line-through{
-text-decoration: line-through;
+a {
+    cursor: pointer;
 }

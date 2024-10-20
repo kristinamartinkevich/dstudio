@@ -1,10 +1,11 @@
 
+import { Button } from '@nextui-org/button';
+import { Card, CardBody, CardFooter, CardHeader, Input, Link } from '@nextui-org/react';
+import { useEffect } from 'react';
+
 import { LockIcon, MailIcon, UserIcon } from '@/assets/icons';
 import { useProjectStore } from '@/store';
 import { Login, Signup } from '@/utils/apiService';
-import { Button } from '@nextui-org/button';
-import { Input, Link } from '@nextui-org/react';
-import { useEffect } from 'react';
 
 interface SignUpFormProps {
     changeAuthneticationMode: () => void;
@@ -42,6 +43,7 @@ function SignUpForm(props: SignUpFormProps) {
             await Signup(email, password);
             setLoading(true);
             const accessToken = await Login(username, password);
+
             setToken(accessToken);
             setLoggedIn(true);
         } catch (error: any) {
@@ -53,58 +55,63 @@ function SignUpForm(props: SignUpFormProps) {
     };
 
     return (
-        <>
-            <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
-                <Input
-                    endContent={
-                        <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+        <form onSubmit={handleSubmit}>
+            <Card className="max-w-sm mx-auto">
+                <CardHeader className="flex font-medium text-xl justify-center">
+                    Sign Up
+                </CardHeader>
+                <CardBody>
+                    <Input
+                        required
+                        className="mb-5"
+                        endContent={
+                            <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                        }
+                        label="Email"
+                        placeholder="Enter your email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <Input
+                        required
+                        className="mb-5"
+                        endContent={
+                            <UserIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                        }
+                        label="Username"
+                        placeholder="Choose a username"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <Input
+                        required
+                        className="mb-5"
+                        endContent={
+                            <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                        }
+                        label="Password"
+                        placeholder="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {error &&
+                        <span className='text-danger tex-small mb-5'>
+                            Error: {error}
+                        </span>
                     }
-                    type="email"
-                    className="mb-5"
-                    label="Email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <Input
-                    endContent={
-                        <UserIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                    }
-                    type="text"
-                    className="mb-5"
-                    label="Username"
-                    placeholder="Choose a username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <Input
-                    endContent={
-                        <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                    }
-                    type="password"
-                    className="mb-5"
-                    label="Password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                {error &&
-                    <span className='text-danger tex-small mb-5'>
-                        Error: {error}
-                    </span>
-                }
-                <div className="flex justify-center mb-5">
-                    <Button type="submit" color="secondary">Sign Up</Button>
-                </div>
-                <div className="flex items-center justify-center">
+                    <div className="flex justify-center">
+                        <Button color="secondary" type="submit">Sign Up</Button>
+                    </div>
+                </CardBody>
+                <CardFooter className="flex items-center justify-center">
                     <span className="text-small">Already have an account?</span>
                     <Link className="text-small ml-1" onClick={changeAuthneticationMode}>Log in</Link>
-                </div>
-            </form>
-        </>
+                </CardFooter>
+            </Card>
+        </form>
     );
 }
 

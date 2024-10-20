@@ -12,4 +12,4 @@ export type Task = {
   dueDate: string;
   createdAt: string;
   updatedAt: string;
-}
+};

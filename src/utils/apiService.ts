@@ -1,41 +1,51 @@
-import { Task } from '@/types';
-import axios from 'axios';
+import axios from "axios";
+
+import { Task } from "@/types";
 
 const API_URL = "http://api.calmplete.net/api";
 
 export const Signup = async (email: string, password: string) => {
     const response = await axios.post(`${API_URL}/InternalLogin/sign-up`, {
         email,
-        password
+        password,
     });
-    return response
+
+    return response;
 };
 
-
-export const Login = async (username: string, password: string): Promise<string> => {
+export const Login = async (
+    username: string,
+    password: string,
+): Promise<string> => {
     const response = await axios.post(`${API_URL}/InternalLogin`, {
         username,
         password,
-        state: "Internal"
+        state: "Internal",
     });
-    return response.data.accessToken
-};
 
+    return response.data.accessToken;
+};
 
 export const fetchTaskById = async (id: string, token: string) => {
     const response = await axios.get(`${API_URL}/Todos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
-    return response
+
+    return response;
 };
 
-export const editTask = async (id: string, task: Partial<Task>, token: string) => {
+export const editTask = async (
+    id: string,
+    task: Partial<Task>,
+    token: string,
+) => {
     const response = await axios.put(`${API_URL}/Todos/${id}`, task, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
         },
     });
-    return response
+
+    return response;
 };
 
 export const createTask = async (token: string, task: Task) => {
@@ -52,22 +62,22 @@ export const fetchTasks = async (token: string) => {
             Authorization: `Bearer ${token}`,
         },
     });
-    return response
-};
 
+    return response;
+};
 
 export const generateUUID = async () => {
-    const response = await axios.get('https://www.uuidgenerator.net/api/version1')
-    return response.data
+    const response = await axios.get(
+        "https://www.uuidgenerator.net/api/version1",
+    );
+
+    return response.data;
 };
 
-
 export const deleteTask = async (token: string, id: string) => {
-    console.log(id)
     await axios.delete(`${API_URL}/Todos/${id}`, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
         },
     });
 };
-
